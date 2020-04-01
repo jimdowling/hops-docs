@@ -1,14 +1,14 @@
 .. _databricks:
 
-Using the Feature Store from Databricks
+Use the Feature Store from Databricks
 =======================================
 
-Connecting to the Feature Store from Databricks requires setting up a Feature Store API Key for Databricks and installing 
+You can connect to the Feature Store from Databricks by setting up a Feature Store API Key for Databricks and installing 
 a Feature Store SDK on your Databricks cluster. This guide explains step by step how to connect to the Feature Store from Databricks.
 
-The Feature Store offers a Python API and a Spark DataFrames API. The Python API is easy to set up and get started with but does not
-offer full functionality. If you want to seamlessly integrate with Spark and read and write DataFrame to the Feature Store then you should
-use the Spark DataFrames API.
+The Feature Store offers a Python API and a Spark DataFrame API. The Python API is easy to set up and get started with but does not
+offer the scale-out capabilities of the Spark DataFrame API. If you want to seamlessly integrate with Spark and read and write DataFrames to the Feature Store then you should
+use the Spark DataFrame API.
 
 .. contents:: :local:
 
@@ -20,7 +20,7 @@ gather this information.
 
 .. include-1-start
 
-Step 1.1: Identifying your Databricks Region, Availability Zone and IAM Role
+Step 1.1: Identify your Databricks Region, Availability Zone and IAM Role
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The *Availability Zone* and *IAM Role* of your Databricks cluster can be found in the configuration section of your Databricks cluster.
@@ -36,7 +36,7 @@ The *Region* of you Databricks cluster is part of the availability zone. In the 
 
 .. include-1-stop
 
-Step 1.2: Identifying your Feature Store instance
+Step 1.2: Identify your Feature Store instance
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The *Public DNS* and *Private DNS* of your Feature Store instance deployed on AWS can be found in EC2 on the AWS Management Console:
@@ -50,7 +50,7 @@ The *Public DNS* and *Private DNS* of your Feature Store instance deployed on AW
 
 .. include-2-start
 
-Step 2: Generating an API Key
+Step 2: Generate an API Key
 -----------------------------
 
 In Hopsworks, click on your username in the top-right corner and select *Settings* to open the user settings.
@@ -59,14 +59,14 @@ Copy the key into your clipboard for the next step.
 
 .. _databricks_api_key.png: ../../../_images/databricks_api_key.png
 .. figure:: ../../../imgs/feature_store/databricks_api_key.png
-    :alt: Creating a Feature Store API Key for Databricks
+    :alt: Create a Feature Store API Key for Databricks
     :target: `databricks_api_key.png`_
     :align: center
     :figclass: align-center
 
 .. include-2-stop
 
-Step 3: Storing the API Key
+Step 3: Store the API Key
 ---------------------------
 
 Option 1: Using the AWS Systems Manager Parameter Store
@@ -148,20 +148,20 @@ Click on *Review*, give the policy a name und click on *Create policy*.
 
 .. include-3-stop
 
-Step 4 (Option 1): Using the Spark DataFrames API
+Step 4 (Option 1): Using the Spark DataFrame API
 -------------------------------------------------
 .. warning:: 
- - The Spark DataFrames API requires your Databricks cluster to be able to reach the private network of your Feature Store cluster.
+ - The Spark DataFrame API requires your Databricks cluster to be able to reach the private network of your Feature Store cluster.
  - See `Step 4 (Option 2): Using the Python API`_. for an alternative that does not require private networking.
 
-Step 4.1: Ensuring up network connectivity
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The Spark DataFrames API needs to be able to connect directly to the IP on which the Feature Store is listening.
+Step 4.1: Establish network connectivity between Databricks and the Feature Store
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~----------------------------------------
+The Spark DataFrame API needs to be able to connect directly to the IP on which the Feature Store is listening.
 This means that if you deploy the Feature Store on AWS you will either need to deploy the Feature Store in the same VPC as your Databricks
 cluster or to set up `VPC Peering <https://docs.databricks.com/administration-guide/cloud-configurations/aws/vpc-peering.html>`_
 between your Databricks VPC and the Feature Store VPC.
 
-**Option 1: Deploying the Feature Store in the Databricks VPC**
+**Option 1: Deploy the Feature Store in the Databricks VPC**
 
 When deploying the Feature Store, select the Databricks *VPC* and *Availability Zone* as the VPC and Availability Zone of your Feature Store cluster.
 Identify your Databricks VPC by searching for VPCs containing Databricks in their name in your Databricks AWS region in the AWS Management Console:
@@ -173,7 +173,7 @@ Identify your Databricks VPC by searching for VPCs containing Databricks in thei
     :align: center
     :figclass: align-center
 
-**Option 2: Setting up VPC peering**
+**Option 2: Set up VPC peering**
 Follow the guide `VPC Peering <https://docs.databricks.com/administration-guide/cloud-configurations/aws/vpc-peering.html>`_ to set up VPC peering
 between you Feature Store cluster and Databricks. Get your Feature Store *VPC ID* and *CIDR* by searching for you Feature Store VPC
 in the AWS Management Console:
@@ -185,7 +185,7 @@ in the AWS Management Console:
     :align: center
     :figclass: align-center
 
-Step 4.2: Configuring the Security Group
+Step 4.2: Configure the Security Group
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The Feature Store *Security Group* needs to be configured to allow traffic from your Databricks clusters to be able to connect to the Feature Store.
@@ -209,7 +209,7 @@ in the source field. Selecting any of the *dbe-worker* Security Groups will be s
     :align: center
     :figclass: align-center
 
-Step 4.3: Installing the hops SDK
+Step 4.3: Install the hops SDK
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. include-4-start
@@ -230,14 +230,14 @@ You can find your Hopsworks version under Settings/Versions inside your Hopswork
 
 .. _hopsworks_version.png: ../../../_images/hopsworks_version.png
 .. figure:: ../../../imgs/feature_store/hopsworks_version.png
-    :alt: Creating a Feature Store API Key
+    :alt: Create a Feature Store API Key
     :target: `hopsworks_version.png`_
     :align: center
     :figclass: align-center
 
 .. include-4-stop
 
-Step 4.4: Configuring Databricks to use the Feature Store
+Step 4.4: Configure Databricks to use the Feature Store
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 After installing the hops library, restart the cluster and open a Databricks notebooks connected to this cluster.
@@ -283,7 +283,7 @@ This will return two configurations that you need to add to your Databricks clus
 
 .. include-5-stop
 
-Step 4.5: Connecting to the Feature Store
+Step 4.5: Connect to the Feature Store
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. include-6-start
@@ -319,9 +319,9 @@ Step 4 (Option 2): Using the Python API
 ---------------------------------------
 .. note:: 
  - The Python API offers an easy way to get started with the Feature Store but does not seamlessly integrate with Spark.
- - If you want to access the Feature Store using Spark DataFrames, see `Using the Spark DataFrames API`_
+ - If you want to access the Feature Store using Spark DataFrames, see `Using the Spark DataFrame API`_
 
-Step 4.1: Installing hopsworks-cloud-sdk
+Step 4.1: Install hopsworks-cloud-sdk
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The feature store library needs to be installed to connect to it. In the Databricks UI, go to *Clusters* and select your cluster.
@@ -339,12 +339,12 @@ You can find your Hopsworks version under Settings/Versions inside your Hopswork
 
 .. _hopsworks_version.png: ../../../_images/hopsworks_version.png
 .. figure:: ../../../imgs/feature_store/hopsworks_version.png
-    :alt: Creating a Feature Store API Key
+    :alt: Create a Feature Store API Key
     :target: `hopsworks_version.png`_
     :align: center
     :figclass: align-center
 
-Step 4.2: Creating a DBFS folder to store certificates
+Step 4.2: Create a DBFS folder to store certificates
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The Hopsworks Feature Store relies on certificates being available in the Databricks cluster to connect to some services inside Hopsworks.
@@ -358,7 +358,7 @@ in a Databricks notebook connected to the prepared cluster:
     dbutils.fs.mkdirs("dbfs:/certs/")
 
 
-Step 4.3: Connecting to the Feature Store
+Step 4.3: Connect to the Feature Store
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. _feature-store-connect-databricks.png: ../../../_images/feature-store-connect-databricks.png
